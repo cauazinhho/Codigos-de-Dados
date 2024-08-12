@@ -58,6 +58,84 @@ inner join categoria
 on produto.idCategoria = categoria.id
 where produto.nome like '%e%';
 
+-- 6 - Listar o número do pedido, a data do pedido e nome do cliente dos pedidos com realizados no mês 08/2016.
+select
+pedido.id as 'Numero do Pedido',
+pedido.data_pedido as 'Data do Pedido',
+cliente.nome as 'Nome do Cliente'
+from pedido
+inner join cliente
+cliente on pedido.idCliente = cliente.id
+where
+pedido.data_pedido between '2016-08-01' and '2016-08-31';
+
+-- 7 - Listar o número do pedido, a data do pedido, nome do cliente e nome do vendedor dos pedidos com realizados no mês 07/2016.
+select
+pedido.id as 'Numero do Pedido',
+pedido.data_pedido as 'Data do Pedido',
+cliente.nome as 'Nome do Cliente',
+vendedor.nome as 'Nome do Vendedor'
+from pedido
+inner join cliente
+cliente on pedido.idCliente = cliente.id
+inner join
+vendedor on pedido.idvendedor = vendedor.id
+where
+pedido.data_pedido between '2016-07-01' and '2016-07-31';
+
+-- 8 - Listar os nome e preço dos produtos comprados pelo cliente de id=1
+select
+produto.nome as 'Nome do Produto',
+produto.preco as 'Preço do Produto'
+from produto
+inner join itens_pedido
+on produto.id = itens_pedido.idProduto
+inner join pedido 
+on itens_pedido.idPedido = pedido.id
+where pedido.idCliente = 1;
+
+-- 9 - Listar o número do pedido e o nome clientes que possuem pedidos e também dos que não possuem pedidos.
+
+-- Clientes que possuem os pedidos feitos
+select
+pedido.id as 'Numero do Pedido',
+cliente.nome as 'Nome dos Clientes'
+from cliente
+inner join pedido 
+on cliente.id = pedido.idCliente;
+
+-- Clientes que não possuem pedidos feitos
+select 'Nenhum Pedido' as NumeroPedido,
+cliente.nome as NomeCliente
+from cliente
+left join pedido on cliente.id = pedido.idCliente
+where pedido.id is null;
+
+
+
+-- 10 - Listar o nome, preço, nome da categoria e nome da marca do produto mais caro.
+select
+produto.nome as 'Nome do Produto',
+produto.preco as 'Preço do Produto',
+categoria.nome as 'Nome da Categoria',
+marca.nome as 'Nome da Marca'
+from produto
+inner join categoria 
+on produto.idcategoria = categoria.id
+inner join marca
+on produto.idmarca = marca.id
+where
+produto.preco = (select max(preco) from produto);
+
+
+-- 11 - Listar o número do pedido, valor total e nome do cliente do pedido mais caro.
+
+
+
+-- 12 - Listar o número do pedido, valor total e nome do vendedor do pedido mais barato.
+
+
+
 -- 
 
 create database projetinholindo;
@@ -86,6 +164,7 @@ data_pedido date, idVendedor int(2), idCliente int(2),
 constraint pedidoVendedor foreign key(idVendedor) references vendedor(id),
 constraint pedidoCliente foreign key(idCliente) references cliente(id)
 );
+select * from pedido;
  
 create table produto(id int (2) primary key auto_increment,
 idCategoria int(2), idMarca int(2), nome varchar (80), preco float(10,2),
@@ -207,7 +286,7 @@ INSERT INTO itens_pedido VALUES (null,3,14,1,1260.00,1260.00);
 INSERT INTO itens_pedido VALUES (null,4,1,10,11.50,115.00);
 INSERT INTO itens_pedido VALUES (null,4,7,10,9.90,99.00);
 INSERT INTO itens_pedido VALUES (null,4,24,10,8.50,85.00);
-INSERT INTO itens_pedid VALUES (null,4,22,2,11.00,22.00);
+INSERT INTO itens_pedido VALUES (null,4,22,2,11.00,22.00);
 INSERT INTO itens_pedido VALUES (null,5,4,10,1.50,15.00);
 INSERT INTO itens_pedido VALUES (null,5,5,4,3.50,14.00);
 INSERT INTO itens_pedido VALUES (null,5,8,1,3700.00,3700.00);
@@ -229,3 +308,5 @@ INSERT INTO itens_pedido VALUES (null,10,4,5,1.50,7.50);
 INSERT INTO itens_pedido VALUES (null,10,9,2,450.00,900.00);
 INSERT INTO itens_pedido VALUES (null,10,10,1,2700.00,2700.00);
 INSERT INTO itens_pedido VALUES (null,10,6,1,2.30,2.30);
+
+select * from itens_pedido;
