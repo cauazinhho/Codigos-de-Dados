@@ -96,20 +96,10 @@ where pedido.idCliente = 1;
 
 -- 9 - Listar o número do pedido e o nome clientes que possuem pedidos e também dos que não possuem pedidos.
 
--- Clientes que possuem os pedidos feitos
-select
-pedido.id as 'Numero do Pedido',
-cliente.nome as 'Nome dos Clientes'
-from cliente
-inner join pedido 
-on cliente.id = pedido.idCliente;
-
--- Clientes que não possuem pedidos feitos
-select 'Nenhum Pedido' as NumeroPedido,
+select pedido.idpedido as NumeroPedido,
 cliente.nome as NomeCliente
 from cliente
-left join pedido on cliente.id = pedido.idCliente
-where pedido.id is null;
+left join pedido on cliente.id = pedido.idCliente;
 
 
 
@@ -127,13 +117,21 @@ on produto.idmarca = marca.id
 where
 produto.preco = (select max(preco) from produto);
 
-
 -- 11 - Listar o número do pedido, valor total e nome do cliente do pedido mais caro.
-
-
+select
+pedido.idpedido, cliente.nome, itens_pedido.valor_total from itens_pedido 
+inner join pedido
+on itens_pedido.idpedido= pedido.idpedido
+inner join cliente
+on pedido.idcliente = cliente.id 
+group by pedido.idpedido order by totalpedido desc limit 1;
 
 -- 12 - Listar o número do pedido, valor total e nome do vendedor do pedido mais barato.
-
+select pedido.idpedido, sum(itens_pedido.valor_total), vendedor.nome
+from vendedor inner join pedido
+on vendedor.idvendedor = pedido.idvendedor
+inner join itens_pedido on pedido.idpedido = itens_pedido.idpedido
+group by pedido.idpedido order by totalpedido limit 1;
 
 
 -- 
